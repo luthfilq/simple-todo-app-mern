@@ -5,6 +5,8 @@ import "./App.css";
 class App extends Tasks { 
     render() {
         const { tasks } = this.state;
+        console.log('gettasks')
+        console.log(tasks);
         return (
             <div className="App flex">
                 <div>                    
@@ -14,7 +16,7 @@ class App extends Tasks {
                         <input 
                             type="text" 
                             placeholder="Add New TO-DO"                           
-                            value={this.state.currentTask}
+                            value={this.state.currentTaskName}
                             required={true}
                             onChange={this.handleChange}/>
                         <button type="submit">Add Task</button>
@@ -24,9 +26,10 @@ class App extends Tasks {
                         {tasks.map((task) => (
                             <div
                                 key={task._id}
-                                className="flex"
+                                className="flex task_container"
                             >
-                                <input type="checkbox" checked={task.completed} onClick={() => this.handleUpdate(task._id)}/>                                
+                                <input type="checkbox" checked={task.completed}                                     
+                                    onClick={() => this.handleUpdate(task._id)}/>                                
                                 <div
                                     className={
                                         task.completed

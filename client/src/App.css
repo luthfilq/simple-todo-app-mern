@@ -10,6 +10,11 @@
   align-items: center;
 }
 
+.task_container {
+  margin: 10px 0;
+  cursor: pointer;
+}
+
 .task {
   flex-grow: 1;
   margin-left: 10px;

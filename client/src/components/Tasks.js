@@ -7,7 +7,7 @@ import {
 } from "../services/taskServices";
 
 class Tasks extends Component {
-    state = { tasks: [], currentTask: "" };
+    state = { tasks: [], currentTaskName: "" };
 
     async componentDidMount() {
         try {
@@ -19,32 +19,31 @@ class Tasks extends Component {
     }
 
     handleChange = ({ currentTarget: input }) => {
-        this.setState({ currentTask: input.value });
+        this.setState({ currentTaskName: input.value });
     };
 
     handleSubmit = async (e) => {
         e.preventDefault();
         const originalTasks = this.state.tasks;
         try {
-            const { data } = await addTask({ task_name: this.state.currentTask });
-            const tasks = originalTasks;
-            tasks.push(data);
-            this.setState({ tasks, currentTask: "" });
+            const { data } = await addTask({ task_name: this.state.currentTaskName });
+            const updatedTasks = originalTasks;
+            updatedTasks.push(data);
+            this.setState({ tasks: updatedTasks, currentTaskName: "" });
         } catch (error) {
             console.log(error);
         }
     };
 
-    handleUpdate = async (currentTaskIndex) => {
+    handleUpdate = async (taskIdRequest) => {
         const originalTasks = this.state.tasks;
-        try {
-            const tasks = [...originalTasks];
-            const index = tasks.findIndex((task) => task._id === currentTaskIndex);
-            tasks[index] = { ...tasks[index] };
-            tasks[index].completed = !tasks[index].completed;
-            this.setState({ tasks });
-            await updateTask(currentTaskIndex, {
-                completed: tasks[index].completed,
+        try {            
+            const updatedTasks = [...originalTasks];            
+            const index = updatedTasks.findIndex((task) => task._id === taskIdRequest);            
+            updatedTasks[index].completed = !updatedTasks[index].completed;
+            this.setState({ tasks: updatedTasks });
+            await updateTask(taskIdRequest, {
+                completed: updatedTasks[index].completed,
             });
         } catch (error) {
             this.setState({ tasks: originalTasks });
@@ -52,14 +51,14 @@ class Tasks extends Component {
         }
     };
 
-    handleDelete = async (currentTask) => {
+    handleDelete = async (taskIdRequest) => {
         const originalTasks = this.state.tasks;
         try {
-            const tasks = originalTasks.filter(
-                (task) => task._id !== currentTask
+            const updatedTasks = originalTasks.filter(
+                (task) => task._id !== taskIdRequest
             );
-            this.setState({ tasks });
-            await deleteTask(currentTask);
+            this.setState({ tasks: updatedTasks });
+            await deleteTask(taskIdRequest);
         } catch (error) {
             this.setState({ tasks: originalTasks });
             console.log(error);
